@@ -340,6 +340,10 @@ svg.fill{overflow:visible}
 .flr .strip{left:5.2cqw;bottom:8.1cqw;height:.6cqw;width:11cqw;display:flex}.flr .strip b{flex:1}
 .flr .lg{right:5cqw;bottom:5.4cqw;width:15cqw;background:#1b130d}
 .flr .grain{opacity:.35}
+.nav{position:absolute;top:50%;z-index:6;width:46px;height:46px;margin-top:-40px;border-radius:50%;border:1px solid #3a3b35;background:rgba(12,13,11,.72);color:#f1eadb;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center}
+.nav:active{transform:scale(.94)}#navPrev{left:max(8px,calc(50% - 300px))}#navNext{right:max(8px,calc(50% - 300px))}
+@media(max-width:560px){.nav{width:40px;height:40px;font-size:19px}#navPrev{left:4px}#navNext{right:4px}}
+.navn{font-size:12px;letter-spacing:.08em;color:#a9a79c;min-width:64px;text-align:center;align-self:center}
 </style>
 </head>
 <body>
@@ -348,7 +352,10 @@ svg.fill{overflow:visible}
     <div class="brand"><i></i><span>Card Lab · Round 4</span></div>
     <div class="hero" id="hero"><div class="shadow"></div></div>
     <p class="hint" id="hint">Move your mouse over the card, or drag your finger across it, to tilt it under the light.</p>
+    <button class="nav" id="navPrev" aria-label="Previous card">&#8592;</button>
+    <button class="nav" id="navNext" aria-label="Next card">&#8594;</button>
     <div class="tools">
+      <button id="bPrev">&#8592; Prev</button><span class="navn" id="navN"></span><button id="bNext">Next &#8594;</button>
       <button id="bFlip" aria-pressed="false">Flip to back</button>
       <button id="bAuto" aria-pressed="true">Auto tilt</button>
     </div>
@@ -705,8 +712,11 @@ function renderGrid(){
     b.appendChild(buildCard(d,false));const s=document.createElement('span');s.textContent=d.name;b.appendChild(s);
     b.onclick=()=>{di=i;flipped=false;applyFlip();renderHero();document.querySelectorAll('.thumb').forEach(n=>n.setAttribute('aria-pressed',+n.dataset.i===di));after();};gs[d.grp-1].appendChild(b);});
 }
-function after(){fit(document);collectFoils();drawFoils(cur.x,cur.y);}
+function go(k){const n=DESIGNS.length,i=((di+k)%n+n)%n,b=document.querySelector('.thumb[data-i="'+i+'"]');if(b)b.click();}
+function after(){const nn=document.getElementById('navN');if(nn)nn.textContent=(di+1)+' / '+DESIGNS.length;fit(document);collectFoils();drawFoils(cur.x,cur.y);}
 function applyFlip(){R.style.setProperty('--flip',flipped?'180deg':'0deg');const b=document.getElementById('bFlip');b.setAttribute('aria-pressed',flipped);b.textContent=flipped?'Flip to front':'Flip to back';}
+['navPrev','bPrev'].forEach(k=>document.getElementById(k).onclick=()=>go(-1));['navNext','bNext'].forEach(k=>document.getElementById(k).onclick=()=>go(1));
+addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(1);else if(e.key==='ArrowLeft')go(-1);});
 document.getElementById('bFlip').onclick=()=>{flipped=!flipped;applyFlip();};
 document.getElementById('bAuto').onclick=e=>{auto=!auto;e.currentTarget.setAttribute('aria-pressed',auto);};
 
