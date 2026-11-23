@@ -329,8 +329,12 @@ svg.fill{overflow:visible}
 .bk dd{font:700 2.5cqw/1 var(--ui);text-align:right;letter-spacing:.06em;text-transform:uppercase}
 .bk .bf{left:0;right:0;bottom:6cqw;text-align:center;font-size:1.9cqw;opacity:.7}
 .bk .key{inset:2.6cqw;border:.25cqw solid currentColor;border-radius:2.6cqw;opacity:.35}
+.bk .bc{left:50%;top:113.2cqw;transform:translateX(-50%);width:50cqw;padding:1.5cqw 2.6cqw 1.1cqw;background:#f7f5ee;color:#0d0e0c;border-radius:1.6cqw;display:flex;flex-direction:column;align-items:center;gap:.7cqw;box-shadow:0 0 0 .2cqw rgba(0,0,0,.08)}
+.bk .bc svg{display:block;width:100%;height:8.4cqw;fill:#0d0e0c}
+.bk .bc span{font:600 2.05cqw/1 'Space Grotesk',ui-monospace,monospace;letter-spacing:.24em}
 
 .ink{background-color:#1b130d}
+.creamink{background-color:#f6ead6}
 .flr .pp{inset:0;background:var(--pp,#f3ecdd)}
 .flr .ph{left:3.4cqw;top:3.4cqw;width:93.2cqw;height:113cqw;object-fit:cover;border-radius:2.2cqw}
 .flr .phl{left:3.4cqw;top:3.4cqw;width:93.2cqw;height:113cqw;border-radius:2.2cqw;box-shadow:inset 0 0 0 .25cqw rgba(27,19,13,.35)}
@@ -461,7 +465,7 @@ const DESIGNS=[
  pitch:'Your idea. Full art, no frame. Everything is printed normally except the two gbakas, which are mirror chrome with the drawing still visible on top, so the street traffic flashes as you tilt and Noussi stays calm in the middle.',
  spec:[['Stock','White card 350 gsm, 35 pt, gloss laminate'],['Print','CMYK full art. Gbaka linework printed over the foil without white ink'],['Foil','Refractor holographic cold foil cut exactly to the two gbakas'],['Gloss','Spot UV on Noussi and the ball'],['Tier','Full art rare']],
  front:()=>scn('',img()+holo('vans',{m:0,metal:[.93,.96,.98],sat:1.45}))+`<div class="nm" data-fit data-max="89">${esc(C.name)}</div><span class="sub cap">${RAR[C.rar]} · Collection 01</span>`+scn('',figi()+uv)+
-  `<div class="dk"></div><i class="lg logo"></i><div class="tr">${esc(C.tr)}</div>${no}${fx}`,bk:['#f1e6d6','#1b130d','silver']},
+  `<div class="dk"></div><i class="lg logo"></i><div class="tr">${esc(C.tr)}</div>${no}${fx}`,bk:['#f1e6d6','#1b130d','ink']},
 
 {id:'ballon',grp:2,name:'Le Ballon',sub:'One point of light',thick:5,edge:'#141412',
  pitch:'The whole card goes quiet, matte and almost black and white, like an old photo. Then the ball: full colour, glitter foil, pressed up so you feel it under your thumb, with holographic ripples behind it like it just moved. Your eye has nowhere else to go.',
@@ -490,7 +494,7 @@ const DESIGNS=[
  spec:[['Stock','White card 350 gsm, 35 pt, matte laminate'],['Print','CMYK scene, terracotta border, ground printed over the foil'],['Foil','Glitter (sparkle) holographic cold foil cut to the ground only, copper tinted'],['Gloss','Spot UV on Noussi'],['Tier','Rare parallel']],
  front:()=>scn('bgc',img()+holo('ground',{m:3,metal:[1,.8,.66],sat:1.3,scale:150},.72))+`<div class="inl"></div>`+scn('fg',figi()+uv)+
   `<div class="nm2" data-fit data-max="60">${esc(C.name)}</div><div class="tr">${esc(C.tr)}</div>${no}<i class="lg logo"></i>
-  <div class="grain fill" style="opacity:.5"></div><div class="glare" style="--gl:.4"></div>`,bk:['#b24a26','#f3e4cf','copper']},
+  <div class="grain fill" style="opacity:.5"></div><div class="glare" style="--gl:.4"></div>`,bk:['#b24a26','#f3e4cf','creamink']},
 
 {id:'aura',grp:2,name:'Aura',sub:'Holographic outline',thick:4,edge:'#0c6e69',
  pitch:'The street drops to a single deep teal and Noussi stays in full colour, wrapped in a holographic outline that follows his whole silhouette and the ball. Faint rays open behind him. It reads like a player being selected in a game.',
@@ -521,7 +525,7 @@ const DESIGNS=[
   `<div class="bandk"></div>`+scn('',`<i class="sl mk" style="${mk('fig')};background:#0d0e0c;transform:translate(2.4cqw,2.2cqw)"></i><i class="sl mk" style="${mk('rim')};background:#0d0e0c;transform:translate(2.4cqw,2.2cqw)"></i><i class="sl mk" style="${mk('rim')};background:#fff"></i>`+figi()+uv)+
   `<div class="lgp"><i class="logo"></i></div><div class="badge"><i class="star"></i><b>${p2(C.n)}</b></div>
   <div class="nm" data-fit>${esc(C.name)}</div><span class="sub cap">${RAR[C.rar]} · Collection 01</span>${no}
-  <div class="glare" style="--gl:.35"></div>`,bk:['#f37a0f','#0d0e0c','silver']},
+  <div class="glare" style="--gl:.35"></div>`,bk:['#f37a0f','#0d0e0c','ink']},
 
 {id:'doublevue',grp:3,name:'Double Vue',sub:'Two pictures in one card',thick:5,edge:'#3a1c9c',
  pitch:'A flip card. Tilt it one way and you see the street in daylight. Tilt it the other way and it becomes night: purple sky, Noussi outlined in neon foil, shockwaves coming off the ball. Same card, two moments, and nobody can resist rocking it back and forth.',
@@ -595,6 +599,10 @@ FL.forEach(([nm,pl,tx,ac,pp,st],i)=>{const k='f'+p2(i+1);DESIGNS.push({id:k,grp:
  front:()=>`<div class="pp" style="--pp:${pp}"></div><img class="ph" src="${IMG[k]}" alt=""><i class="phl"></i><span class="pill" style="--pp:${pp}">${'F'+p2(i+1)}</span>
   <div class="nm" data-fit>${esc(nm)}</div><div class="strip"><b style="background:#f37a0f"></b><b style="background:#fff"></b><b style="background:#17726f"></b></div>
   <span class="pl cap" style="--ac:${ac}">${esc(pl)} · Côte d'Ivoire</span><i class="lg logo"></i><div class="grain fill"></div><div class="glare" style="--gl:.12"></div>`,bk:[pp,'#1b130d','ink']});});
+const C128=['212222','222122','222221','121223','121322','131222','122213','122312','132212','221213','221312','231212','112232','122132','122231','113222','123122','123221','223211','221132','221231','213212','223112','312131','311222','321122','321221','312212','322112','322211','212123','212321','232121','111323','131123','131321','112313','132113','132311','211313','231113','231311','112133','112331','132131','113123','113321','133121','313121','211331','231131','213113','213311','213131','311123','311321','331121','312113','312311','332111','314111','221411','431111','111224','111422','121124','121421','141122','141221','112214','112412','122114','122411','142112','142211','241211','221114','413111','241112','134111','111242','121142','121241','114212','124112','124211','411212','421112','421211','212141','214121','412121','111143','111341','131141','114113','114311','411113','411311','113141','114131','311141','411131','211412','211214','211232','2331112'];
+function code128(s){const v=[104];for(const ch of s)v.push(ch.charCodeAt(0)-32);let sum=104;for(let i=1;i<v.length;i++)sum+=v[i]*i;v.push(sum%103);v.push(106);let x=10,r='';for(const c of v){const p=C128[c];for(let k=0;k<p.length;k++){const w=+p[k];if(k%2===0)r+=`<rect x="${x}" y="0" width="${w}" height="40"/>`;x+=w;}}return `<svg viewBox="0 0 ${x+10} 40" preserveAspectRatio="none">${r}</svg>`;}
+const SERIAL=(n,k)=>`CNCB-${p2(n)}-${String(k).padStart(6,'0')}`;
+DESIGNS.forEach(d=>{if(!d.fl)d.spec.push(['Back','Unique barcode and serial number on every card, printed as variable data, for prize verification. Sample number shown'])});
 function backHTML(d){
   const [bg,fg,metal]=d.bk;
   if(d.fl)return `<div class="lat"></div><i class="lg logo L ${metal} emb"></i>
@@ -606,6 +614,7 @@ function backHTML(d){
   <div class="bn"><span class="${metal} tx" data-fit data-max="80">${esc(C.name)}</span></div>
   <div class="bt">${esc(C.tr)}</div>
   <dl class="L"><dt>Carte</dt><dd>${p3(C.n)} / 007</dd><dt>Rareté</dt><dd>${RAR[C.rar]}</dd><dt>Finition</dt><dd>${esc(d.name)}</dd><dt>Collection</dt><dd>01 · Les visages de Babi</dd></dl>
+  <div class="L bc">${code128(SERIAL(C.n,137))}<span>${SERIAL(C.n,137)}</span></div>
   <span class="bf cap">Chez Nous C'est Babi · Abidjan</span><div class="key"></div><div class="glare" style="--gl:.3"></div>`;
 }
 function buildCard(d,full){
