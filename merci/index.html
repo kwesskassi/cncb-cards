@@ -32,7 +32,10 @@ header.top p{margin:0;color:var(--muted);font-size:13px;max-width:56ch}
   background-size:50px 50px,50px 50px,10px 10px,10px 10px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .stage .hint,.stage .side-l{position:absolute;top:10px;color:rgba(255,255,255,.6);font:600 10px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase}
 .stage .hint{right:12px}.stage .side-l{left:12px}
-.persp{perspective:1600px;display:flex;align-items:center;justify-content:center;padding:52px 18px 48px;min-height:340px}
+.persp{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:44px 18px 46px}
+.slot{perspective:1600px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.tag{color:#fff;font:700 12px/1 var(--f-body);letter-spacing:.22em;text-transform:uppercase;background:rgba(0,0,0,.32);padding:7px 12px;border-radius:999px}
+.tag span{color:#F8B27A;margin-left:8px}
 .rot{transition:transform .5s ease}
 .card3d{position:relative;transform-style:preserve-3d;will-change:transform}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
@@ -77,7 +80,7 @@ header.top p{margin:0;color:var(--muted);font-size:13px;max-width:56ch}
 .btn[hidden]{display:none}
 .spec{display:grid;grid-template-columns:1.15fr 1fr;gap:22px;margin-top:18px}
 @media (max-width:760px){.spec{grid-template-columns:1fr}}
-@media (max-width:600px){.stage .side-l{display:none}}
+@media (max-width:600px){.stage .side-l{display:none}.nav{top:auto;bottom:4px;transform:none;width:38px;height:38px}}
 .spec h2{font-family:var(--f-display);font-weight:900;font-size:clamp(26px,4vw,34px);margin:0 0 4px}
 .spec .sub{color:var(--muted);margin:0 0 14px;font-size:14px}
 .rows{display:grid;gap:0;border-top:1px solid var(--line);margin:0}
@@ -106,20 +109,18 @@ footer{margin-top:28px;color:var(--muted);font-size:12px}
 <div class="wrap">
   <header class="top">
     <h1>Billet Merci, 8 finitions</h1>
-    <p>Le billet validé (PDF final), recto et verso, simulé en 8 matières et finitions. Bouge la souris ou glisse le doigt sur le billet pour le pencher sous la lumière.</p>
+    <p>Le billet validé (PDF final), recto et verso côte à côte, simulé en 8 matières et finitions. Bouge la souris ou glisse le doigt sur les billets pour les pencher sous la lumière.</p>
   </header>
   <div class="lbl">Finition</div>
   <div class="chips" id="chips" role="toolbar" aria-label="Finitions"></div>
   <div class="stage" id="stage">
-    <div class="side-l" id="sideL">Recto</div>
     <div class="hint" id="hint">glisse pour incliner</div>
-    <div class="persp"><div class="rot" id="rot"><div class="card3d" id="card"></div></div></div>
+    <div class="persp"><div class="slot"><div class="tag">Recto<span>devant</span></div><div class="card3d" id="cardR"></div></div><div class="slot"><div class="tag">Verso<span>dos</span></div><div class="card3d" id="cardV"></div></div></div>
     <button class="nav prev" id="prev" aria-label="Finition précédente">‹</button>
     <button class="nav next" id="next" aria-label="Finition suivante">›</button>
     <div class="counter" id="counter"></div>
   </div>
   <div class="tools">
-    <button class="btn primary" id="flipBtn">Retourner (voir le verso)</button>
     <button class="btn uvb" id="uvBtn" aria-pressed="false" hidden>Lampe UV</button>
     <button class="btn" id="edgeBtn" aria-pressed="false">Voir la tranche</button>
     <button class="btn" id="autoBtn" aria-pressed="true">Mouvement auto : oui</button>
@@ -151,7 +152,7 @@ footer{margin-top:28px;color:var(--muted);font-size:12px}
         <li>Le design ne change pas : c'est le PDF final, recto et verso, les 6 combinaisons.</li>
         <li>Format à confirmer avec Martina. Le fichier fait 2600 × 1456 px, soit environ 220 × 123 mm à 300 dpi.</li>
         <li>Coupon détachable : micro-perforation sur la ligne en pointillés (撕线).</li>
-        <li>Verso imprimé tête-bêche (on retourne le billet par le haut), comme dans la simulation : le dos du coupon tombe sur la photo. Sinon, en détachant le coupon, on coupe le logo et le début de MERCI au verso.</li>
+        <li>Verso imprimé tête-bêche (on retourne le billet par le haut) : le dos du coupon tombe sur la photo du verso. Sinon, en détachant le coupon, on coupe le logo et le début de MERCI au verso.</li>
         <li>Coins arrondis à la découpe (模切圆角).</li>
       </ol>
     </aside>
@@ -251,25 +252,25 @@ function faceHTML(f,face,combo){
 
 // ---------- 3D card ----------
 let cur=0,combo=0,cw=860,chh=cw*H/W,pxmm=cw/MMW,flip=0,fl=0,uvOn=false;
-function size(){const st=$('stage').clientWidth;const narrow=st<600;const p=document.querySelector('.persp');
- if(narrow){cw=Math.min(640,Math.round(window.innerHeight*.68),Math.round((st-36)*W/H));$('rot').style.transform='rotate(90deg)';p.style.minHeight=(cw+60)+'px';$('hint').textContent='glisse pour incliner';}
- else{cw=Math.min(900,st-120);$('rot').style.transform='';p.style.minHeight='';$('hint').textContent='bouge la souris sur le billet';}
+function size(){const st=$('stage').clientWidth;const narrow=st<600;
+ if(narrow){cw=st-28;$('hint').textContent='glisse pour incliner';}
+ else{cw=Math.min(820,st-130);$('hint').textContent='bouge la souris sur les billets';}
  chh=cw*H/W;pxmm=cw/MMW;}
 function render(){
  const f=F[cur];size();
  const t=Math.max(1.4,f.edge[1]*pxmm*1.5);
- const card=$('card');card.style.width=cw+'px';card.style.height=chh+'px';
  const ec=f.edge[0];
  const eH=ec==='triplex'?'linear-gradient(90deg,#f3ecdc 0 30%,#F07A1A 30% 70%,#f3ecdc 70%)':ec;
  const eV=ec==='triplex'?'linear-gradient(180deg,#f3ecdc 0 30%,#F07A1A 30% 70%,#f3ecdc 70%)':ec;
- card.innerHTML=`
-  <div class="face front" style="transform:translateZ(${t/2}px)">${faceHTML(f,'r',combo)}</div>
-  <div class="face back" style="transform:rotateX(180deg) translateZ(${t/2}px)">${faceHTML(f,'v',combo)}</div>
+ for(const fc of ['r','v']){const card=$(fc==='r'?'cardR':'cardV');card.style.width=cw+'px';card.style.height=chh+'px';
+  card.innerHTML=`
+  <div class="face front" style="transform:translateZ(${t/2}px)">${faceHTML(f,fc,combo)}</div>
+  <div class="face" style="transform:rotateX(180deg) translateZ(${t/2}px);background:${ec==='triplex'?'#f3ecdc':ec};border-radius:.8%/1.43%"></div>
   <div class="edge" style="width:${cw}px;height:${t}px;background:${eV};top:0;left:0;transform-origin:50% 0;transform:translateZ(${t/2}px) rotateX(-90deg)"></div>
   <div class="edge" style="width:${cw}px;height:${t}px;background:${eV};top:${chh}px;left:0;transform-origin:50% 0;transform:translateZ(${t/2}px) rotateX(-90deg)"></div>
   <div class="edge" style="width:${t}px;height:${chh}px;background:${eH};top:0;left:0;transform-origin:0 50%;transform:translateZ(${t/2}px) rotateY(90deg)"></div>
-  <div class="edge" style="width:${t}px;height:${chh}px;background:${eH};top:0;left:${cw}px;transform-origin:0 50%;transform:translateZ(${t/2}px) rotateY(90deg)"></div>`;
- card.classList.toggle('uv-on',uvOn&&!!f.uv);
+  <div class="edge" style="width:${t}px;height:${chh}px;background:${eH};top:0;left:${cw}px;transform-origin:0 50%;transform:translateZ(${t/2}px) rotateY(90deg)"></div>`;}
+ $('cardR').classList.toggle('uv-on',uvOn&&!!f.uv);
  document.querySelectorAll('#chips .chip').forEach((c,i)=>c.setAttribute('aria-pressed',i===cur));
  document.querySelectorAll('#combos .chip').forEach((c,i)=>c.setAttribute('aria-pressed',i===combo));
  $('counter').textContent=`${String(cur+1).padStart(2,'0')} / ${String(F.length).padStart(2,'0')}`;
@@ -287,16 +288,15 @@ function render(){
 let EX=68,tx=0,ty=0,auto=true,t0=performance.now(),edgeView=false;
 const cl=x=>Math.max(0,Math.min(1,x));
 function apply(){
- const card=$('card');if(!card)return;
- card.style.transform=edgeView?`rotateX(${EX+tx*.3+fl*180}deg) rotateY(${12+ty*.4}deg)`:`rotateX(${tx+fl*180}deg) rotateY(${ty}deg)`;
+ for(const card of [$('cardR'),$('cardV')]){if(!card)continue;
+ card.style.transform=edgeView?`rotateX(${EX+tx*.3}deg) rotateY(${12+ty*.4}deg)`:`rotateX(${tx}deg) rotateY(${ty}deg)`;
  const S=card.style;
- const setL=(el,txx)=>{if(!el)return;const ang=(225+ty*3.2-txx*2.4)*Math.PI/180;const m=.75+Math.min(.35,(Math.abs(ty)+Math.abs(txx))/60);const Lx=Math.cos(ang)*m,Ly=Math.sin(ang)*m;
-  el.style.setProperty('--lxp',Math.max(Lx,0).toFixed(3));el.style.setProperty('--lxn',Math.max(-Lx,0).toFixed(3));el.style.setProperty('--lyp',Math.max(Ly,0).toFixed(3));el.style.setProperty('--lyn',Math.max(-Ly,0).toFixed(3));};
- setL(card.querySelector('.face.front'),tx);setL(card.querySelector('.face.back'),-tx);
- S.setProperty('--gx',(50-ty*2.6).toFixed(1)+'%');S.setProperty('--gy',(30+tx*3.6).toFixed(1)+'%');S.setProperty('--gyb',(30-tx*3.6).toFixed(1)+'%');
+ const el=card.querySelector('.face.front');if(el){const ang=(225+ty*3.2-tx*2.4)*Math.PI/180;const m=.75+Math.min(.35,(Math.abs(ty)+Math.abs(tx))/60);const Lx=Math.cos(ang)*m,Ly=Math.sin(ang)*m;
+  el.style.setProperty('--lxp',Math.max(Lx,0).toFixed(3));el.style.setProperty('--lxn',Math.max(-Lx,0).toFixed(3));el.style.setProperty('--lyp',Math.max(Ly,0).toFixed(3));el.style.setProperty('--lyn',Math.max(-Ly,0).toFixed(3));}
+ S.setProperty('--gx',(50-ty*2.6).toFixed(1)+'%');S.setProperty('--gy',(30+tx*3.6).toFixed(1)+'%');
  S.setProperty('--sx',(50-ty*3.2).toFixed(1)+'%');
  S.setProperty('--fx',(ty*2.2).toFixed(1)+'%');S.setProperty('--fy',(tx*2.6).toFixed(1)+'%');
- S.setProperty('--hx',(ty*3.4+tx*1.2).toFixed(1)+'%');S.setProperty('--hy',(tx*3).toFixed(1)+'%');
+ S.setProperty('--hx',(ty*3.4+tx*1.2).toFixed(1)+'%');S.setProperty('--hy',(tx*3).toFixed(1)+'%');}
 }
 let flAnim=null;
 function loop(now){
@@ -310,7 +310,7 @@ const narrow=()=>$('stage').clientWidth<600;
 stage.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'&&!dragging){const [x,y]=pos(e);ty=x*36;tx=-y*24;auto=false;updAuto();apply();}});
 stage.addEventListener('pointerdown',e=>{if(e.target.closest('.nav'))return;dragging=true;lx=e.clientX;ly=e.clientY;auto=false;updAuto();});
 window.addEventListener('pointerup',()=>dragging=false);
-stage.addEventListener('pointermove',e=>{if(!dragging||e.pointerType==='mouse')return;let dx=e.clientX-lx,dy=e.clientY-ly;if(narrow()){const a=dx;dx=dy;dy=-a;}
+stage.addEventListener('pointermove',e=>{if(!dragging||e.pointerType==='mouse')return;let dx=e.clientX-lx,dy=e.clientY-ly;
  ty=Math.max(-30,Math.min(30,ty+dx*.25));tx=Math.max(-20,Math.min(20,tx-dy*.25));lx=e.clientX;ly=e.clientY;apply();});
 function go(d){cur=(cur+d+F.length)%F.length;uvOn=false;$('uvBtn').setAttribute('aria-pressed','false');render();}
 $('prev').onclick=()=>go(-1);$('next').onclick=()=>go(1);
@@ -318,8 +318,7 @@ document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(1);if(e.key==
 function updAuto(){$('autoBtn').textContent='Mouvement auto : '+(auto?'oui':'non');$('autoBtn').setAttribute('aria-pressed',auto);}
 $('autoBtn').onclick=()=>{auto=!auto;t0=performance.now();updAuto();};
 $('edgeBtn').onclick=()=>{edgeView=!edgeView;$('edgeBtn').setAttribute('aria-pressed',edgeView);$('edgeBtn').textContent=edgeView?'Vue de face':'Voir la tranche';apply();};
-$('flipBtn').onclick=()=>{flip=1-flip;flAnim={a:fl,b:flip,t:performance.now()};$('flipBtn').textContent=flip?'Retourner (voir le recto)':'Retourner (voir le verso)';$('sideL').textContent=flip?'Verso':'Recto';};
-$('uvBtn').onclick=()=>{uvOn=!uvOn;$('uvBtn').setAttribute('aria-pressed',uvOn);$('card').classList.toggle('uv-on',uvOn);if(uvOn&&flip){$('flipBtn').click();}};
+$('uvBtn').onclick=()=>{uvOn=!uvOn;$('uvBtn').setAttribute('aria-pressed',uvOn);$('cardR').classList.toggle('uv-on',uvOn);};
 $('copyBtn').onclick=()=>{const f=F[cur];const txt=`CNCB thank-you ticket, finish option ${cur+1}: ${f.en}
 Design: our final approved PDF, front and back, 6 versions. No design change.
 Size: please confirm. Our file is 2600 x 1456 px (about 220 x 123 mm at 300 dpi), rounded corners.
